@@ -6,10 +6,10 @@
 <title>NEXORA AI</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap">
 <style>
-:root{--bg:#0d0f1c;--bg2:#141729;--bg3:#1c2036;--line:#2a2f4a;--tx:#e8eaf6;--mu:#8b91b5;--ac:#7cc4ff;--ac2:#a78bfa;--wa:#f5b85c;--er:#ff7a8a;--r:14px}
+:root{--bg:#0d0f1c;--bg2:#141729;--bg3:#1c2036;--line:#2a2f4a;--tx:#e8eaf6;--mu:#8b91b5;--ac:#7cc4ff;--ac2:#a78bfa;--wa:#f5b85c;--er:#ff7a8a;--r:14px;--badge:52px}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{background:var(--bg);color:var(--tx);font:15px/1.6 Sora,system-ui,sans-serif;overflow:hidden}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 Sora,system-ui,sans-serif;overflow:hidden;padding-bottom:var(--badge)}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0}
 #app{display:flex;height:100%}
@@ -85,7 +85,7 @@ button{cursor:pointer;background:none;border:0}
 #set textarea{min-height:70px;resize:vertical}
 #set .r{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 #set .info{background:var(--bg);border-radius:10px;padding:10px;font-size:13px;color:var(--mu);margin-top:8px}
-@media(max-width:800px){#side{position:fixed;inset:0 auto 0 0;transform:translateX(-100%);width:84%;max-width:300px}#side.on{transform:none}#menu{display:block}#hello h1{font-size:24px}}
+@media(max-width:800px){#side{position:fixed;inset:0 auto var(--badge) 0;transform:translateX(-100%);width:84%;max-width:300px}#side.on{transform:none}#menu{display:block}#hello h1{font-size:24px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
