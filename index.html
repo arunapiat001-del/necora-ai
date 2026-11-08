@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEXORA AI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#0d0f1c;--bg2:#141729;--bg3:#1c2036;--line:#2a2f4a;--tx:#e8eaf6;--mu:#8b91b5;--ac:#7cc4ff;--ac2:#a78bfa;--wa:#f5b85c;--er:#ff7a8a;--r:14px}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 Sora,system-ui,sans-serif;overflow:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+#app{display:flex;height:100%}
+#side{width:280px;background:var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:14px;gap:10px;transition:transform .25s;z-index:20}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.04em;padding:4px 2px 8px}
+.logo svg{width:28px;height:28px}
+.btn{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:9px 12px;text-align:left;transition:border-color .15s}
+.btn:hover{border-color:var(--ac)}
+.btn.pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#0d0f1c;font-weight:600;border:0}
+#q{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+#list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.sec{color:var(--mu);font-size:12px;margin:8px 2px 2px}
+.ci{display:flex;align-items:center;border-radius:8px;padding:7px 10px;gap:6px}
+.ci:hover,.ci.on{background:var(--bg3)}
+.ci span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.ci button{color:var(--mu);padding:0 4px}
+.ci button:hover{color:var(--er)}
+#main{flex:1;display:flex;flex-direction:column;min-width:0}
+#top{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);padding-top:max(10px,env(safe-area-inset-top))}
+#menu{display:none;font-size:20px;padding:2px 8px}
+#mi{flex:1;color:var(--mu);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#msgs{flex:1;overflow:auto;padding:20px 16px}
+.wrap{max-width:760px;margin:0 auto}
+#hello{text-align:center;margin-top:12vh}
+#hello h1{font-size:30px;line-height:1.25}
+#hello p{color:var(--mu);margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px}
+.chips button{border:1px solid var(--line);border-radius:20px;padding:7px 14px;color:var(--mu)}
+.chips button:hover{color:var(--tx);border-color:var(--ac)}
+.m{margin-bottom:22px}
+.m.u .b{background:var(--bg3);border-radius:var(--r);padding:10px 14px;margin-left:auto;width:fit-content;max-width:88%;white-space:pre-wrap;word-break:break-word}
+.m.a .b{word-break:break-word}
+.b p{margin:.5em 0}.b ul,.b ol{margin:.5em 0 .5em 1.4em}
+.b h1,.b h2,.b h3{margin:.8em 0 .3em;line-height:1.3}
+.b a{color:var(--ac)}
+.b code{background:var(--bg3);border-radius:5px;padding:1px 6px;font:13px ui-monospace,Menlo,Consolas,monospace}
+.cb{background:#090b16;border:1px solid var(--line);border-radius:10px;margin:.7em 0;overflow:hidden}
+.cb .h{display:flex;justify-content:space-between;padding:5px 12px;background:var(--bg2);color:var(--mu);font-size:12px}
+.cb pre{padding:12px;overflow-x:auto}
+.cb code{background:none;padding:0;white-space:pre}
+.k{color:var(--ac2)}.s{color:#9be28f}.c{color:#6b7194}.n{color:var(--wa)}
+.acts{display:flex;gap:4px;margin-top:4px;opacity:.7}
+.m.u .acts{justify-content:flex-end}
+.acts button{color:var(--mu);font-size:12px;padding:3px 8px;border-radius:6px}
+.acts button:hover{background:var(--bg3);color:var(--tx)}
+.src{margin-top:10px;border-left:2px solid var(--wa);padding:2px 12px;font-size:13px;color:var(--mu)}
+.src a{color:var(--wa)}
+.cur::after{content:"";display:inline-block;width:8px;height:1em;background:var(--ac);vertical-align:-2px;margin-left:2px;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+#bar{padding:8px 16px calc(12px + env(safe-area-inset-bottom))}
+#note{max-width:760px;margin:0 auto 8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;display:none}
+#note.er{border-color:var(--er)}#note.wa{border-color:var(--wa)}
+.pg{height:4px;background:var(--bg3);border-radius:4px;margin-top:8px;overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .2s}
+#box{max-width:760px;margin:0 auto;background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:10px 12px}
+#box:focus-within{border-color:var(--ac)}
+#in{width:100%;background:none;border:0;outline:0;resize:none;max-height:180px;padding:4px}
+.row{display:flex;align-items:center;gap:6px;margin-top:4px}
+.row .sp{flex:1}
+.ib{width:36px;height:36px;border-radius:10px;color:var(--mu);font-size:18px}
+.ib:hover,.ib.on{background:var(--bg3);color:var(--tx)}
+.ib.on{color:var(--wa)}
+#send{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#0d0f1c;font-weight:700}
+#files{display:flex;gap:6px;flex-wrap:wrap}
+.f{background:var(--bg3);border-radius:8px;padding:2px 8px;font-size:12px}
+.f b{cursor:pointer;margin-left:6px;color:var(--mu)}
+#ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+#ov.on{display:flex}
+#set{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);width:100%;max-width:520px;max-height:90vh;overflow:auto;padding:20px}
+#set h2{margin-bottom:12px}
+#set label{display:block;margin:12px 0 4px;color:var(--mu);font-size:13px}
+#set select,#set textarea,#set input[type=text]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+#set textarea{min-height:70px;resize:vertical}
+#set .r{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+#set .info{background:var(--bg);border-radius:10px;padding:10px;font-size:13px;color:var(--mu);margin-top:8px}
+@media(max-width:800px){#side{position:fixed;inset:0 auto 0 0;transform:translateX(-100%);width:84%;max-width:300px}#side.on{transform:none}#menu{display:block}#hello h1{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+<aside id="side">
+  <div class="logo"><svg viewBox="0 0 32 32" fill="none"><path d="M5 26V6l22 20V6" stroke="url(#g)" stroke-width="3.5" stroke-linejoin="round"/><defs><linearGradient id="g" x1="5" y1="6" x2="27" y2="26"><stop stop-color="#7cc4ff"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>NEXORA AI</div>
+  <button class="btn pri" id="newc">+ New Chat</button>
+  <input id="q" placeholder="Search Conversations" autocomplete="off">
+  <div id="list"></div>
+  <div class="sec">AI Tools</div>
+  <button class="btn" data-tool="Jelaskan dan periksa kode berikut, cari bug, lalu beri perbaikan:\n\n">Coding Assistant</button>
+  <button class="btn" data-tool="Perbaiki tata bahasa dan buat tulisan ini lebih jelas:\n\n">Writing Assistant</button>
+  <button class="btn" data-tool="Buat ringkasan poin-poin dari teks berikut:\n\n">Ringkas Teks</button>
+  <button class="btn" data-tool="Terjemahkan ke bahasa Inggris:\n\n">Terjemahkan</button>
+  <button class="btn" id="setb">Settings</button>
+</aside>
+<section id="main">
+  <div id="top"><button id="menu" aria-label="Menu">☰</button><div id="mi"></div><button class="ib" id="loadb" title="Muat model">⬇</button></div>
+  <div id="msgs"><div class="wrap" id="chat"></div></div>
+  <div id="bar">
+    <div id="note"></div>
+    <div id="box">
+      <div id="files"></div>
+      <textarea id="in" rows="1" placeholder="Tanyakan apa saja…"></textarea>
+      <div class="row">
+        <button class="ib" id="att" title="Upload file">📎</button>
+        <button class="ib" id="web" title="Web search (Wikipedia)">🌐</button>
+        <div class="sp"></div>
+        <button class="ib" id="send" title="Kirim">↑</button>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<input type="file" id="fi" accept=".txt,.md,.csv,.json,.pdf,.js,.py,.html,.css,.java,.c,.cpp,.ts,.log" multiple hidden>
+<div id="ov"><div id="set">
+  <h2>Settings</h2>
+  <label>Model AI</label><select id="s-model"></select>
+  <div class="info" id="s-info"></div>
+  <label>Temperatur: <span id="tv"></span></label><input type="range" id="s-temp" min="0" max="1.5" step="0.1" style="width:100%">
+  <label>Gaya bahasa</label><select id="s-tone"><option value="">Netral</option><option value="Gunakan gaya santai dan ramah.">Santai</option><option value="Gunakan gaya formal dan profesional.">Formal</option><option value="Jelaskan seperti kepada pemula, dengan contoh sederhana.">Ramah pemula</option></select>
+  <label>Panjang jawaban</label><select id="s-len"><option value="">Normal</option><option value="Jawab sesingkat mungkin.">Ringkas</option><option value="Jawab selengkap dan sedetail mungkin.">Detail</option></select>
+  <label>Bahasa jawaban</label><select id="s-lang"><option value="Jawab dalam bahasa Indonesia.">Indonesia</option><option value="Answer in English.">English</option><option value="">Ikuti bahasa pengguna</option></select>
+  <label>System prompt / instruksi khusus</label><textarea id="s-sys"></textarea>
+  <div class="info">Privasi: percakapan dan file hanya disimpan di browser ini (IndexedDB). Model berjalan lokal di perangkatmu. Satu-satunya data yang keluar: unduhan model (sekali) dan, bila tombol 🌐 aktif, kata kunci pencarian ke Wikipedia.</div>
+  <div class="r"><button class="btn pri" id="s-ok">Simpan</button><button class="btn" id="s-clr">Hapus semua riwayat</button><button class="btn" id="s-x">Tutup</button></div>
+</div></div>
+
+<script type="module">
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MODELS=[
+ ['Qwen2.5-0.5B-Instruct-q4f16_1-MLC','Qwen2.5 0.5B (ringan, ±0,4 GB)'],
+ ['Llama-3.2-1B-Instruct-q4f16_1-MLC','Llama 3.2 1B (±0,9 GB)'],
+ ['Qwen2.5-1.5B-Instruct-q4f16_1-MLC','Qwen2.5 1.5B (seimbang, ±1,6 GB)'],
+ ['Llama-3.2-3B-Instruct-q4f16_1-MLC','Llama 3.2 3B (butuh RAM besar, ±2,3 GB)']];
+const DEF={model:MODELS[1][0],temp:0.7,tone:'',len:'',lang:'Jawab dalam bahasa Indonesia.',sys:'',web:false};
+
+// ---------- penyimpanan (IndexedDB) ----------
+const db=new Promise((ok,no)=>{const r=indexedDB.open('nexora',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const kvGet=async k=>{try{const d=await db;return await new Promise(ok=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(undefined)})}catch{return undefined}};
+const kvSet=async(k,v)=>{try{const d=await db;d.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch{}};
+let chats=[],cur=null,S={...DEF},engine=null,loaded='',gen=false,files=[],lib=null;
+const save=()=>kvSet('chats',chats);
+
+// ---------- markdown ----------
+function hl(code){
+ return esc(code).replace(/(\/\/.*|#.*)$|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(function|const|let|var|return|if|else|for|while|class|import|from|def|print|in|new|public|static|void|int|async|await|try|catch|True|False|None|true|false|null)\b|\b(\d+\.?\d*)\b/gm,
+ (m,c,s,k,n)=>c?`<span class="c">${c}</span>`:s?`<span class="s">${s}</span>`:k?`<span class="k">${k}</span>`:`<span class="n">${n}</span>`);
+}
+function md(t){
+ const blocks=[];
+ t=t.replace(/```(\w*)\n?([\s\S]*?)(```|$)/g,(m,l,c)=>{blocks.push(`<div class="cb"><div class="h"><span>${esc(l||'kode')}</span><button data-copy>Copy</button></div><pre><code>${hl(c.replace(/\n$/,''))}</code></pre></div>`);return `\u0000${blocks.length-1}\u0000`});
+ t=esc(t);
+ const inl=s=>s.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\*([^*\n]+)\*/g,'<i>$1</i>').replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+ let out='',list=null;
+ const close=()=>{if(list){out+=`</${list}>`;list=null}};
+ for(const ln of t.split('\n')){
+  let m;
+  if(m=ln.match(/^(#{1,3})\s+(.*)/)){close();out+=`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`}
+  else if(m=ln.match(/^\s*[-*]\s+(.*)/)){if(list!=='ul'){close();out+='<ul>';list='ul'}out+=`<li>${inl(m[1])}</li>`}
+  else if(m=ln.match(/^\s*\d+[.)]\s+(.*)/)){if(list!=='ol'){close();out+='<ol>';list='ol'}out+=`<li>${inl(m[1])}</li>`}
+  else if(!ln.trim()){close()}
+  else if(/^\u0000\d+\u0000$/.test(ln.trim())){close();out+=ln.trim()}
+  else{close();out+=`<p>${inl(ln)}</p>`}
+ }
+ close();
+ return out.replace(/\u0000(\d+)\u0000/g,(m,i)=>blocks[i]);
+}
+
+// ---------- UI ----------
+function note(html,type,prog){const n=$('#note');if(!html){n.style.display='none';return}n.className=type||'';n.style.display='block';n.innerHTML=html+(prog!=null?`<div class="pg"><i style="width:${prog*100}%"></i></div>`:'')}
+function info(){const m=MODELS.find(x=>x[0]===S.model);$('#mi').textContent=(loaded===S.model?'● ':'○ ')+(m?m[1]:S.model)+(loaded===S.model?' · aktif di perangkat':' · belum dimuat')}
+function renderList(){
+ const q=$('#q').value.toLowerCase();
+ const l=$('#list');l.innerHTML='<div class="sec">Recent Chats</div>';
+ chats.filter(c=>!q||c.title.toLowerCase().includes(q)||c.messages.some(m=>m.content.toLowerCase().includes(q))).sort((a,b)=>b.ts-a.ts).forEach(c=>{
+  const d=document.createElement('div');d.className='ci'+(c===cur?' on':'');
+  d.innerHTML=`<span>${esc(c.title)}</span><button title="Hapus">✕</button>`;
+  d.querySelector('span').onclick=()=>{cur=c;render();$('#side').classList.remove('on')};
+  d.querySelector('button').onclick=()=>{chats=chats.filter(x=>x!==c);if(cur===c)cur=null;save();render()};
+  l.append(d)});
+}
+function render(){
+ renderList();info();
+ const el=$('#chat');el.innerHTML='';
+ if(!cur||!cur.messages.length){
+  el.innerHTML=`<div id="hello"><h1>Halo, apa yang bisa dibantu hari ini?</h1><p>One Assistant. Endless Possibilities.</p><div class="chips"><button>Jelaskan cara kerja blockchain</button><button>Buat fungsi Python untuk cek bilangan prima</button><button>Tulis puisi tentang hujan</button></div></div>`;
+  el.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{$('#in').value=b.textContent;send()});return}
+ cur.messages.forEach((m,i)=>el.append(msgEl(m,i)));
+ $('#msgs').scrollTop=1e9;
+}
+function msgEl(m,i,live){
+ const d=document.createElement('div');d.className='m '+(m.role==='user'?'u':'a');
+ const last=i===cur.messages.length-1;
+ const src=m.sources?.length?`<div class="src">Sumber pencarian (bukan pengetahuan model):<br>${m.sources.map(s=>`<a href="${s.url}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join('<br>')}</div>`:'';
+ d.innerHTML=`<div class="b${live?' cur':''}">${m.role==='user'?esc(m.content):md(m.content)}</div>${src}${live?'':`<div class="acts">${m.role==='user'?'<button data-a="edit">Edit</button>':'<button data-a="copy">Copy</button>'+(last?'<button data-a="regen">Regenerate</button>':'')}<button data-a="del">Hapus</button></div>`}`;
+ d.onclick=e=>{
+  const t=e.target;
+  if(t.dataset.copy!==undefined){navigator.clipboard.writeText(t.closest('.cb').querySelector('code').textContent);t.textContent='Copied';setTimeout(()=>t.textContent='Copy',1200)}
+  const a=t.dataset.a;if(!a||gen)return;
+  if(a==='copy'){navigator.clipboard.writeText(m.content);t.textContent='Copied';setTimeout(()=>t.textContent='Copy',1200)}
+  if(a==='del'){cur.messages.splice(i,1);save();render()}
+  if(a==='regen'){cur.messages.pop();run()}
+  if(a==='edit'){$('#in').value=m.content;cur.messages.splice(i);save();render();$('#in').focus()}
+ };
+ return d;
+}
+
+// ---------- model ----------
+async function getLib(){if(!lib)lib=await import('https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.79/+esm');return lib}
+async function loadModel(){
+ if(engine&&loaded===S.model)return true;
+ if(!navigator.gpu){note('<b>WebGPU tidak tersedia.</b> Model lokal tidak bisa berjalan di browser ini. Gunakan Chrome Android terbaru (perangkat dengan RAM ≥ 6 GB) atau Chrome desktop. Aplikasi tidak akan berpura-pura menjawab tanpa model.','er');return false}
+ try{
+  note('Menyiapkan mesin AI…','',0);
+  const L=await getLib();
+  if(!L.prebuiltAppConfig.model_list.some(m=>m.model_id===S.model)){note('Model "'+esc(S.model)+'" tidak ada di versi WebLLM ini. Pilih model lain di Settings.','er');return false}
+  if(engine){try{await engine.unload()}catch{}}
+  engine=await L.CreateMLCEngine(S.model,{initProgressCallback:p=>note('<b>Memuat model</b> (unduhan pertama bisa beberapa menit, lalu tersimpan di cache browser)<br>'+esc(p.text),'',p.progress)});
+  loaded=S.model;note('');info();return true;
+ }catch(e){engine=null;loaded='';note('<b>Gagal memuat model:</b> '+esc(String(e.message||e))+'<br>Penyebab umum: memori GPU kurang, koneksi terputus, atau WebGPU diblokir. Coba model yang lebih kecil di Settings.','er');return false}
+}
+
+// ---------- web search (Wikipedia, tanpa API key) ----------
+async function search(q){
+ const r=await fetch('https://id.wikipedia.org/w/api.php?action=query&list=search&srlimit=3&format=json&origin=*&srsearch='+encodeURIComponent(q));
+ const j=await r.json();
+ return j.query.search.map(x=>({title:x.title,url:'https://id.wikipedia.org/wiki/'+encodeURIComponent(x.title.replace(/ /g,'_')),text:x.snippet.replace(/<[^>]+>/g,'')}));
+}
+
+// ---------- chat ----------
+function sysPrompt(){return ['Kamu adalah NEXORA AI, asisten AI serbaguna.',S.lang,S.tone,S.len,S.sys].filter(Boolean).join(' ')}
+function history(extra){
+ const budget=9000;let msgs=[],n=0;
+ for(let i=cur.messages.length-1;i>=0;i--){const m=cur.messages[i];n+=m.content.length;if(n>budget&&msgs.length)break;msgs.unshift({role:m.role,content:m.content})}
+ return [{role:'system',content:sysPrompt()+(extra||'')},...msgs];
+}
+async function send(){
+ if(gen)return;
+ let text=$('#in').value.trim();if(!text&&!files.length)return;
+ if(!cur){cur={id:Date.now(),title:'Chat baru',messages:[],ts:Date.now()};chats.push(cur)}
+ let content=text;
+ if(files.length){content=files.map(f=>`[File: ${f.name}]\n${f.text.slice(0,6000)}`).join('\n\n')+'\n\n'+text;}
+ if(cur.title==='Chat baru')cur.title=(text||files[0].name).slice(0,40);
+ cur.messages.push({role:'user',content});cur.ts=Date.now();
+ $('#in').value='';$('#in').style.height='auto';files=[];renderFiles();save();render();run(text);
+}
+async function run(q){
+ const ok=await loadModel();if(!ok){render();return}
+ gen=true;$('#send').textContent='■';$('#send').title='Stop';
+ let extra='',sources=[];
+ if(S.web){
+  try{const query=q||cur.messages.filter(m=>m.role==='user').pop().content.slice(0,120);sources=await search(query);
+   if(sources.length)extra='\n\nHasil pencarian web (Wikipedia). Gunakan bila relevan dan sebutkan bahwa informasinya berasal dari pencarian:\n'+sources.map((s,i)=>`[${i+1}] ${s.title}: ${s.text}`).join('\n');
+   else note('Pencarian tidak menemukan hasil; menjawab dari pengetahuan model.','wa')}
+  catch{note('Pencarian web gagal (offline atau diblokir); menjawab dari pengetahuan model.','wa')}
+ }
+ const m={role:'assistant',content:'',sources};cur.messages.push(m);
+ render();const live=msgEl(m,cur.messages.length-1,true);$('#chat').lastChild.replaceWith(live);
+ const b=live.querySelector('.b');
+ try{
+  const s=await engine.chat.completions.create({messages:history(extra).slice(0,-0||undefined),stream:true,temperature:S.temp});
+  for await(const c of s){m.content+=c.choices[0]?.delta?.content||'';b.innerHTML=md(m.content);$('#msgs').scrollTop=1e9}
+ }catch(e){if(!m.content)m.content='⚠ Generasi gagal: '+String(e.message||e)}
+ if(!m.content)m.content='(dihentikan)';
+ gen=false;$('#send').textContent='↑';$('#send').title='Kirim';save();render();
+}
+function history_fix(){}
+$('#send').onclick=()=>{if(gen){engine?.interruptGenerate()}else send()};
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();send()}});
+$('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'});
+
+// ---------- file ----------
+function renderFiles(){const f=$('#files');f.innerHTML='';files.forEach((x,i)=>{const d=document.createElement('span');d.className='f';d.innerHTML=esc(x.name)+'<b>✕</b>';d.querySelector('b').onclick=()=>{files.splice(i,1);renderFiles()};f.append(d)})}
+async function readPdf(file){
+ if(!window.pdfjsLib){await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=ok;s.onerror=no;document.head.append(s)});pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}
+ const p=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;let t='';
+ for(let i=1;i<=Math.min(p.numPages,30);i++){t+=(await(await p.getPage(i)).getTextContent()).items.map(x=>x.str).join(' ')+'\n'}
+ return t;
+}
+$('#att').onclick=()=>$('#fi').click();
+$('#fi').onchange=async e=>{
+ for(const f of e.target.files){
+  try{const text=/\.pdf$/i.test(f.name)?await readPdf(f):await f.text();
+   if(!text.trim())throw 0;files.push({name:f.name,text});
+   if(text.length>6000)note('File "'+esc(f.name)+'" panjang; hanya 6.000 karakter pertama yang dikirim ke model karena batas konteks.','wa')}
+  catch{note('Tidak bisa membaca "'+esc(f.name)+'". PDF hasil scan (gambar) tidak didukung.','er')}
+ }
+ e.target.value='';renderFiles();
+};
+$('#web').onclick=()=>{S.web=!S.web;$('#web').classList.toggle('on',S.web);kvSet('settings',S);note(S.web?'Web search aktif: kata kunci dikirim ke Wikipedia, hasilnya diberi label sumber.':'','wa')};
+
+// ---------- sidebar & tools ----------
+$('#newc').onclick=()=>{cur=null;render();$('#side').classList.remove('on');$('#in').focus()};
+$('#q').oninput=renderList;
+$('#menu').onclick=()=>$('#side').classList.toggle('on');
+$('#loadb').onclick=loadModel;
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{$('#in').value=b.dataset.tool.replace(/\\n/g,'\n');$('#side').classList.remove('on');$('#in').focus()});
+
+// ---------- settings ----------
+function fillSet(){
+ $('#s-model').innerHTML=MODELS.map(m=>`<option value="${m[0]}">${m[1]}</option>`).join('');
+ $('#s-model').value=S.model;$('#s-temp').value=S.temp;$('#tv').textContent=S.temp;
+ $('#s-tone').value=S.tone;$('#s-len').value=S.len;$('#s-lang').value=S.lang;$('#s-sys').value=S.sys;
+ $('#s-info').textContent=`Status: ${loaded===S.model?'dimuat':'belum dimuat'} · WebGPU: ${navigator.gpu?'tersedia':'TIDAK tersedia'} · RAM perangkat: ${navigator.deviceMemory?'≥'+navigator.deviceMemory+' GB':'tidak diketahui'}. Model kecil lebih cepat tetapi jawabannya kurang akurat; jangan mengandalkannya untuk fakta penting. Model tersimpan di cache browser setelah diunduh.`;
+}
+$('#s-temp').oninput=e=>$('#tv').textContent=e.target.value;
+$('#setb').onclick=()=>{fillSet();$('#ov').classList.add('on');$('#side').classList.remove('on')};
+$('#s-x').onclick=()=>$('#ov').classList.remove('on');
+$('#s-ok').onclick=()=>{
+ Object.assign(S,{model:$('#s-model').value,temp:+$('#s-temp').value,tone:$('#s-tone').value,len:$('#s-len').value,lang:$('#s-lang').value,sys:$('#s-sys').value});
+ kvSet('settings',S);$('#ov').classList.remove('on');info();
+};
+$('#s-clr').onclick=()=>{if(confirm('Hapus semua riwayat percakapan?')){chats=[];cur=null;save();render()}};
+
+// ---------- start ----------
+(async()=>{
+ chats=(await kvGet('chats'))||[];S={...DEF,...((await kvGet('settings'))||{})};
+ $('#web').classList.toggle('on',S.web);
+ if(!navigator.gpu)note('<b>Peringatan:</b> browser ini belum mendukung WebGPU, jadi model lokal tidak dapat dimuat. Gunakan Chrome terbaru.','wa');
+ render();
+})();
+</script>
+</body>
+</html>
